@@ -1,0 +1,8 @@
+Cuando leas el enunciado nuevo, no busques “qué patrón uso”. Buscá frases que suenen a problema y preguntate:
+
+¿Hay varias formas de hacer algo que cambian? → Strategy (o State)
+¿Hay algo que controlar antes de acceder o que guardar para no repetir? → Proxy
+¿Hay una estructura de árbol, como menús o permisos dentro de grupos? → Composite
+¿Hay que agregarle cosas a algo, como el café con leche y azúcar? → Decorator
+¿Hay algo incompatible que tenga que encajar? → Adapter
+¿Alguien tiene que enterarse cuando otro cambia? → Observer
