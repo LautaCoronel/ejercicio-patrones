@@ -1,27 +1,23 @@
 # ejercicio-patrones
 
-Material para Practicas Profesionalizantes III (patrones de diseno e hilos en C#).
+Practicas Profesionalizantes III: los dos examenes a rendir.
 
-## 00-Enunciados
-| Archivo | Tema |
-|---|---|
-| `Parcial_1_TD_2026_SarazaFlix.pdf` | Parcial 1: SarazaFlix (Strategy, Proxy, Visitor) |
-| `Parcial_YaLlega_IMG_*.jpeg` | Parcial YaLlega S.A. (fotos del enunciado y grilla) |
-| `Recuperatorio_PP3_2026_Bateria.pdf` | Recuperatorio: Bateria con SuscriptorVisual y SuscriptorBitacora (Observer) |
-| `Parcial4_Hilos_IMG_*.jpeg` | Parcial 4: Sistema de impresion concurrente (Thread + Monitor) |
+## 01-YaLlega
+Plataforma de pedidos y entregas. **Patrones:** Strategy (costo de envio), Proxy (menu remoto + plan + cache de 5), Visitor (exportar listados), Repository (persistir pedidos). Arquitectura en capas: DomainModel, DAL, Services, BLL, UI, Tests.
 
-## 01-Patrones
-| Carpeta | Que hay |
+| Archivo | Que es |
 |---|---|
-| `YaLlega` | Solucion YaLlega (Strategy, Proxy, Visitor, Repository), zip y diagrama de clases |
-| `YaLlega-Lautaro` | Version entregada de YaLlega, con diagrama |
-| `Bateria-Observer-Lautaro` | Parcial 2: Bateria con Observer, bitacora en archivo con rotacion por fecha (.NET Framework) |
-| `Referencia-GoF` | Los 23 patrones GoF en C# + soluciones modelo: Banco-Prestamos, Sistema-Alarma, SarazaFlix, YaLlega |
+| `Enunciado/` | Fotos del enunciado y la grilla |
+| `YaLlega/` | Codigo fuente (abrir `YaLlega.sln`) |
+| `YaLlega.zip` | El mismo codigo comprimido |
+| `YaLlega-DiagramaClases.pdf` / `.png` | Diagrama de clases |
 
-## 02-Hilos
-| Carpeta | Que hay |
+## 02-Bateria-Observer
+Bateria de laptop con suscriptores. **Patron:** Observer (relacion 1 a muchos). SuscriptorVisual muestra el estado en consola (primer parcial) y SuscriptorBitacora lo guarda en archivo con fecha/hora y rotacion por dia (segundo parcial). Arquitectura en capas: DomainModel, DAL, BLL, UI.
+
+| Archivo | Que es |
 |---|---|
-| `SistemaImpresion` | Parcial 4: Singleton + Productor-Consumidor (Monitor) + Strategy/Factory de notificaciones, con pruebas |
-| `Lavadero-Monitor` | Productor-consumidor con `Thread` + `Monitor` (Wait/PulseAll), .NET Framework 4.8 |
-| `Supermercado-Semaforo` | `Task` + `SemaphoreSlim` + `lock` + `Task.WhenAll`, .NET 8, 5 ejercicios cortos y machete |
-| `Teoria` | Presentaciones de la Unidad 6 y de Productor-Consumidor |
+| `Enunciado/` | Recuperatorio_PP3_2026.pdf |
+| `SistemaBateria/` | Codigo fuente (abrir `SistemaBateria.sln`) |
+| `SistemaBateria.zip` | El mismo codigo comprimido |
+| `SistemaBateria-DiagramaClases.pdf` / `.png` | Diagrama de clases |
