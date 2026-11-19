@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
-using DomainModel;
 using BLL;
+using BLL.Patrones;
+using DAL;
+using DomainModel;
 
 namespace UI;
 
@@ -17,7 +19,7 @@ class Program
         {
             Console.WriteLine();
             Console.WriteLine("### ERROR EN TIEMPO DE EJECUCION ###");
-            Console.WriteLine(ex);
+            Console.WriteLine(ex.Message);
         }
         Console.WriteLine();
         Console.WriteLine("Fin. Presione una tecla para cerrar...");
@@ -26,23 +28,42 @@ class Program
 
     static void Run()
     {
-        Console.WriteLine("=== YaLlega (Strategy + Proxy + Visitor + Repository) ===");
-        var cliente = new Cliente { Id = 1, Nombre = "Lautaro", Plan = Plan.Clasico };
-        var pizza = new Producto { Id = 1, Nombre = "Pizza", EsPremium = false };
-        var sushi = new Producto { Id = 2, Nombre = "Sushi Premium", EsPremium = true };
+        Console.WriteLine("=== YaLlega S.A. (Strategy + Proxy + Visitor + Repository) ===");
 
-        var pedidos = AppFactory.CrearPedidoService(cliente.Plan);
-        Console.WriteLine(pedidos.Agregar(cliente, pizza, 1000m, 10));  // tarifa normal
-        Console.WriteLine(pedidos.Agregar(cliente, pizza, 1000m, 90));  // desde cache, +60%
-        Console.WriteLine(pedidos.Agregar(cliente, sushi, 1000m, 50));  // BLOQUEADO (plan clasico)
-        pedidos.SetModoPromocion(true);
-        Console.WriteLine(pedidos.Agregar(cliente, pizza, 1000m, 90));  // gratis (modo promocion)
-        Console.WriteLine("Pedidos guardados: " + pedidos.Historial().Count);
+        var catalogo = AppFactory.CrearCatalogo();
+        var repo = new RepositorioPedidosArchivo("pedidos.txt");
+        var ana = new Cliente { Id = 1, Nombre = "Ana", Plan = Plan.Clasico };
 
-        Console.WriteLine();
-        Console.WriteLine("-- Exportar listado (Visitor) --");
+        var servicio = AppFactory.CrearPedidoService(ana, catalogo, repo);
+
+        Console.WriteLine("\n-- Pedido 1: cambia la demanda mientras esta abierto --");
+        servicio.AbrirPedido();                       // demanda baja: tarifa normal
+        servicio.AgregarProducto(1);                  // Pizza desde el SERVIDOR
+        servicio.MedirDemanda(NivelDemanda.Media);    // +25%
+        servicio.AgregarProducto(4);                  // Sushi: RECHAZADO (plan clasico)
+        servicio.AgregarProducto(1);                  // Pizza desde el DISPOSITIVO (cache)
+        servicio.MedirDemanda(NivelDemanda.Alta);     // +60% (hora pico, lluvia)
+        servicio.CerrarPedido();
+
+        Console.WriteLine("\n-- Pedido 2: el operador fuerza modo promocion --");
+        servicio.AbrirPedido();
+        servicio.AgregarProducto(2);
+        servicio.ForzarModo(new EnvioPromocion());    // boton del operador
+        servicio.MedirDemanda(NivelDemanda.Alta);     // no cambia: el modo esta forzado
+        servicio.CerrarPedido();
+
+        Console.WriteLine("\nPedidos guardados en pedidos.txt");
+
+        Console.WriteLine("\n-- Exportar listados (Visitor) --");
         var export = AppFactory.CrearExportService();
-        var listado = new List<IExportable> { cliente, pizza, sushi };
-        Console.Write(export.Exportar(listado));
+        var productos = new List<IExportable> { catalogo.ObtenerProducto(1), catalogo.ObtenerProducto(4) };
+        var clientes = new List<IExportable> { ana };
+        var pedidos = new List<IExportable>(repo.ObtenerTodos());
+
+        export.Exportar(productos, "productos.txt");
+        export.Exportar(clientes, "clientes.txt");
+        export.Exportar(pedidos, "pedidos_export.txt");
+        Console.Write(export.ArmarTexto(pedidos));
+        Console.WriteLine("Exportados: productos.txt, clientes.txt, pedidos_export.txt");
     }
 }

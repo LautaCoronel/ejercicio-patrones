@@ -1,21 +1,14 @@
-# YaLlega - Nucleo de plataforma de pedidos y entregas
+# YaLlega S.A. - Nucleo de plataforma de pedidos y entregas
 
-**Patrones:** Strategy (costo de envio), Proxy (menu remoto + plan + cache), Visitor (exportar cualquier listado), Repository (persistir pedidos).
+| Requisito del enunciado | Patron / clase |
+|---|---|
+| Envio segun demanda (normal, +25%, +60%) y modo promocion gratis | **Strategy**: `IEstrategiaEnvio` + `TarifaNormal`, `RecargoDemandaMedia`, `RecargoDemandaAlta`, `EnvioPromocion` |
+| Cambiar el calculo con el pedido abierto | `PedidoService.MedirDemanda` (cada cambio queda en `Pedido.Tarifas`) |
+| Operador fuerza un modo con un boton | `PedidoService.ForzarModo` / `LiberarModo` |
+| Catalogo remoto, bloquear por plan, cachear 5 menus, la pantalla no distingue | **Proxy**: `ICatalogo`, `CatalogoRemoto`, `CatalogoProxy` |
+| Exportar cualquier listado con encabezados, una unica rutina | **Visitor**: `IExportVisitor`, `FilaTextoVisitor`, `EncabezadoVisitor`, `ExportService` |
+| Persistir cada pedido (cliente, productos, tarifas, origen del menu, rechazados) | **Repository**: `RepositorioPedidosArchivo` -> `pedidos.txt` |
+| 3 o mas capas | DomainModel, DAL, Services, BLL, UI, Tests |
+| Casos de prueba por escenario | `Tests/YaLlegaTests.cs` (13 tests) |
 
-| Capa | Contenido |
-| --- | --- |
-| DomainModel | Plan, Producto, Cliente, Pedido, IExportable, IExportVisitor |
-| DAL | IRepositorio, RepositorioMemoria |
-| Services | ILogger, ConsoleLogger |
-| BLL | Patrones/EstrategiaEnvio, Patrones/MenuProxy, Patrones/TextoVisitor, PedidoService, ExportService, AppFactory |
-| UI | Program (arma pedido, bloqueo por plan, modo promocion, exporta) |
-| Tests | YaLlegaTests |
-
-Mapa enunciado -> patron:
-- Envio segun demanda / modo promocion -> **Strategy** (o State si lo ves como estados).
-- Menu remoto + bloquear por plan + cachear 5 -> **Proxy**.
-- Exportar cualquier listado con una unica rutina -> **Visitor**.
-- Persistir cada pedido -> **Repository** (DAL).
-- 3+ capas -> esta misma estructura.
-
-Abri `YaLlega.sln`, inicio UI, F5. Tests con `dotnet test`.
+Abrir `YaLlega.sln`, proyecto de inicio **UI**, F5. Tests: Prueba > Ejecutar todas las pruebas.

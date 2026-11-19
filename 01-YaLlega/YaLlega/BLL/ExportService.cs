@@ -1,18 +1,27 @@
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 using BLL.Patrones;
 using DomainModel;
-using System.Collections.Generic;
-using System.Text;
 
 namespace BLL;
 
-// Exporta cualquier listado con una unica rutina (Visitor).
+// Unica rutina de exportacion para cualquier listado (Visitor).
 public class ExportService
 {
-    public string Exportar(List<IExportable> items)
+    public string ArmarTexto(IEnumerable<IExportable> items)
     {
-        var v = new TextoVisitor();
+        var lista = items.ToList();
         var sb = new StringBuilder();
-        foreach (var it in items) sb.AppendLine(it.Accept(v));
+        if (lista.Count == 0) return "";
+
+        sb.AppendLine(lista[0].Accept(new EncabezadoVisitor()));
+        var fila = new FilaTextoVisitor();
+        foreach (var it in lista) sb.AppendLine(it.Accept(fila));
         return sb.ToString();
     }
+
+    public void Exportar(IEnumerable<IExportable> items, string ruta)
+        => File.WriteAllText(ruta, ArmarTexto(items), Encoding.UTF8);
 }
